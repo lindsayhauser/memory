@@ -104,6 +104,7 @@ class Starter extends React.Component {
   render() {
     return (
   <div>
+    <h3>Memory Game!</h3>
     <div className="row">
       <Card root={this} num={0} />
       <Card root={this} num={1} />
