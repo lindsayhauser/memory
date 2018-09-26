@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
 export default function game_init(root) {
-  ReactDOM.render(<Starter />, root);
+  ReactDOM.render(<Memory />, root);
 }
 
-class Starter extends React.Component {
+class Memory extends React.Component {
   constructor(props) {
     super(props);
     this.handleClickChange = this.handleClickChange.bind(this);
-    this.state =  this.initializeGame() // inialize the game
+    this.state =  this.initializeGame() // initialize the game
   }
 
   initializeGame() {
@@ -56,9 +56,9 @@ class Starter extends React.Component {
       x--;
       let i = Math.floor(Math.random() * x);
 
-      let temp = array[x];
+      let tempArray = array[x];
       array[x] = array[i];
-      array[i] = temp;
+      array[i] = tempArray;
     }
     return array;
   }
@@ -73,7 +73,7 @@ class Starter extends React.Component {
       return;
     }
     // First card clicked
-    if(currClicks[0] == null) {
+    if (currClicks[0] == null) {
       currClicks[0] = cardNum;
       guessedArray[cardNum] = true;
     }
@@ -85,8 +85,8 @@ class Starter extends React.Component {
       var valueAtIndex = this.state.board[currClicks[0]];
       var valueAtIndex2 = this.state.board[cardNum];
 
-      if(valueAtIndex == valueAtIndex2) {
-      currClicks = Array(2).fill(null);
+      if (valueAtIndex == valueAtIndex2) {
+        currClicks = Array(2).fill(null);
       }
       else {
       // Reference for timeout: https://stackoverflow.com/questions/41254029/sleep-function-for-react-native
@@ -131,8 +131,8 @@ class Starter extends React.Component {
     </div>
     { <p>Total number of Clicks: {this.state.totalClicks}</p> }
     <div>
-    <p>
-      <button onClick={this.newGame.bind(this)}>New Game</button>
+      <p>
+        <button onClick={this.newGame.bind(this)}>New Game</button>
       </p>
     </div>
   </div>
@@ -147,7 +147,7 @@ function Card(params) {
   var valueAtIndex = root.state.board[number];
   var guessed = root.state.guessed[number]
   
-  if(guessed) {
+  if (guessed) {
     return(
     <div className='border' >
       <div className = 'greenSquare'>
@@ -157,7 +157,7 @@ function Card(params) {
   }
   
   return (
-  <div className='border' onClick={ () => root.handleClickChange(number)}>
+  <div className='border' onClick={() => root.handleClickChange(number)}>
     <div className='square'>
       <p>?</p>
     </div>
