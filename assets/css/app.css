@@ -6,4 +6,49 @@
     padding-top: 10ex;
     text-align: center;
 }
+.square {
+    width: 6rem;
+    height: 6rem;
+    text-align: center;
+    color:black;
+    background: grey;
+    font-size: 25pt;
 
+    /* rem; */
+    margin: auto;
+    padding: 1rem;
+}
+.square:hover {
+    background-color: yellow;
+    cursor: pointer
+}
+
+.greenSquare {
+    width: 6rem;
+    height: 6rem;
+    text-align: center;
+    color:black;
+    background: greenyellow;
+    font-size: 25pt;
+
+    /* rem; */
+    margin: auto;
+    padding: 1rem;
+}
+
+.border {
+    margin: auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+p {
+    display: block;
+    text-align:center;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    margin-top: 0;
+    margin-bottom: 40; 
+}
