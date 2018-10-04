@@ -1,3 +1,9 @@
-<div id="root">
-  React app loading...
+<div class="row">
+  <div class="column">
+    <h1 id="index-page">Join a Game</h1>
+    <label for="game-input"> Enter Game Name:</label>
+    <p><input type="text" id="game-input" value="1"</p>
+    <p><button onClick="window.location = '/game/'+ document.getElementById('game-input').value"
+      id="game-button">Play Game</button></p>
+  </div>
 </div>
