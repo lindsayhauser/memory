@@ -1,0 +1,13 @@
+<!-- Created by referencing Nat Tuck's lecture notes -->
+<script>
+ window.gameName = "<%= @game %>";
+</script>
+
+ <div class="row">
+  <div class="column">
+    <h1>Memory Game: <%= @game %></h1>
+    <div id="root">
+      <p>React component loading...</p>
+    </div>
+  </div>
+</div>
