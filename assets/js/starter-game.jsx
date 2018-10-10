@@ -16,8 +16,8 @@ class Memory extends React.Component {
       guessed: [],
       player_one: "",
       player_two: "",
-      player_one_score = 0,
-      player_two_score = 0
+      player_one_score: 0,
+      player_two_score: 0
     }
 
     this.firstCard  = null;  // The index of first card in a round clicked
@@ -45,19 +45,27 @@ class Memory extends React.Component {
   }
 
   handleClickChange(cardNum) {
-    // Then this is the first card we clicked
-    if(this.firstCard == null) {
-      this.firstCard = cardNum
+    this.channel.push("clickCard", {card1: cardNum})
+    .receive("ok", this.sendGuess.bind(this));
 
-      this.channel.push("updateOneCard", {card1: cardNum})
-                .receive("ok", this.gotView.bind(this));
-    }
-    else {
+    // this.channel.push("clickCard", {cardNum})
+    // .receive("ok", this.sendGuess.bind(this));
+
+    // this.gotView.bind(this)
+
+    // this.firstCard = null;
+
+    // // Then this is the first card we clicked
+    // if(this.firstCard == null) {
+    //   this.firstCard = cardNum
+
+    //   this.channel.push("updateOneCard", {card1: cardNum})
+    //             .receive("ok", this.gotView.bind(this));
+    // }
+    // else {
       // Second card clicked
-      this.channel.push("updateTwoCards", {card1: this.firstCard, card2: cardNum})
-        .receive("ok", this.sendGuess.bind(this));
-        this.firstCard = null;
-    }
+
+    // }
   }
 
   render() {

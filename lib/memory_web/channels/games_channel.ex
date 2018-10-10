@@ -3,7 +3,8 @@ defmodule MemoryWeb.GamesChannel do
   use MemoryWeb, :channel
 
   alias Memory.Game
-  alias Memory.BackupAgent
+  #alias Memory.BackupAgent
+  alias Memory.GameServer
 
   def join("games:" <> game, payload, socket) do
     if authorized?(payload) do
@@ -24,31 +25,47 @@ defmodule MemoryWeb.GamesChannel do
 
 
   def handle_in("guess", _payload, socket) do
-    #view = GameServer.guess(socket.assigns[:game], socket.assigns[:user], ll)
-    #{:reply, {:ok, %{ "game" => view}}, socket}
-    # name = socket.assigns[:name]
-    # game = Game.guess(socket.assigns[:game])
-    # socket = assign(socket, :game, game)
-    # BackupAgent.put(name, game)
-    # {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+    view = GameServer.guess(socket.assigns[:game], socket.assigns[:user])
+    {:reply, {:ok, %{ "game" => view}}, socket}
+    #name = socket.assigns[:name]
+    #game = Game.guess(socket.assigns[:game])
+    #socket = assign(socket, :game, game)
+    #BackupAgent.put(name, game)
+    #{:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
 
-  def handle_in("updateOneCard", %{"card1" => c1}, socket) do
-    view = GameServer.guess(socket.assigns[:game], socket.assigns[:user], c1)
-    game = Game.updateOneCard(socket.assigns[:game], c1)
-    socket = assign(socket, :game, game)
-    name = socket.assigns[:name]
-    BackupAgent.put(name, game)
-    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+  def handle_in("clickCard", %{"card1" => c1}, socket) do
+    view = GameServer.clickCard(socket.assigns[:game], socket.assigns[:user], c1)
+    #game = Game.updateTwoCards(socket.assigns[:game], socket.assigns[:user], c1, c2)
+    #socket = assign(socket, :game, game)
+    #name = socket.assigns[:name]
+    #BackupAgent.put(name, game)
+    # broadcast! socket, "updateTwoCards", %{body: body}
+    #   {:noreply, socket}
+    {:reply, {:ok, %{ "game" => view}}, socket}
   end
 
-  def handle_in("updateTwoCards", %{"card1" => c1, "card2" => c2}, socket) do
-    game = Game.updateTwoCards(socket.assigns[:game], c1, c2)
-    socket = assign(socket, :game, game)
-    name = socket.assigns[:name]
-    BackupAgent.put(name, game)
-    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
-  end
+  # def handle_in("updateOneCard", %{"card1" => c1}, socket) do
+  #   view = GameServer.updateOneCard(socket.assigns[:game], socket.assigns[:user], c1)
+  #   {:reply, {:ok, %{ "game" => view}}, socket}
+  #   #{:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+  #   end
+  #   #socket = assign(socket, :game, game)
+  #   #name = socket.assigns[:name]
+  #   #game = Game.updateOneCard(socket.assigns[:game], socket.assigns[:user], c1)
+  #   #BackupAgent.put(name, game)
+  #
+  #
+  # def handle_in("updateTwoCards", %{"card1" => c1, "card2" => c2}, socket) do
+  #   view = GameServer.updateTwoCards(socket.assigns[:game], socket.assigns[:user], c1, c2)
+  #   #game = Game.updateTwoCards(socket.assigns[:game], socket.assigns[:user], c1, c2)
+  #   #socket = assign(socket, :game, game)
+  #   #name = socket.assigns[:name]
+  #   #BackupAgent.put(name, game)
+  #   # broadcast! socket, "updateTwoCards", %{body: body}
+  #   #   {:noreply, socket}
+  #   {:reply, {:ok, %{ "game" => view}}, socket}
+  # end
 
   def handle_in("restart", payload, socket) do
     game = Game.new()
@@ -56,7 +73,7 @@ defmodule MemoryWeb.GamesChannel do
     socket = socket
     |> assign(:game, game)
     |> assign(:name, name)
-    BackupAgent.put(name, game)
+    #BackupAgent.put(name, game)
     {:ok, %{"game" => Game.client_view(game)}, socket}
   end
 
