@@ -5,14 +5,18 @@ defmodule MemoryWeb.GamesChannel do
   alias Memory.Game
   alias Memory.BackupAgent
 
-  def join("games:" <> name, payload, socket) do
+  def join("games:" <> game, payload, socket) do
     if authorized?(payload) do
-      game = BackupAgent.get(name) || Game.new()
-      socket = socket
-      |> assign(:game, game)
-      |> assign(:name, name)
-      BackupAgent.put(name, game)
-      {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
+      #game = BackupAgent.get(name) || Game.new()
+      socket = assign(socket, :game, game)
+      view = GameServer.view(game, socket.assigns[:user])
+      {:ok, %{"join" => game, "game" => view}, socket}
+
+      #socket = socket
+      # |> assign(:game, game)
+      # |> assign(:name, name)
+      # BackupAgent.put(name, game)
+      #{:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
       end
@@ -20,14 +24,17 @@ defmodule MemoryWeb.GamesChannel do
 
 
   def handle_in("guess", _payload, socket) do
-    name = socket.assigns[:name]
-    game = Game.guess(socket.assigns[:game])
-    socket = assign(socket, :game, game)
-    BackupAgent.put(name, game)
-    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+    #view = GameServer.guess(socket.assigns[:game], socket.assigns[:user], ll)
+    #{:reply, {:ok, %{ "game" => view}}, socket}
+    # name = socket.assigns[:name]
+    # game = Game.guess(socket.assigns[:game])
+    # socket = assign(socket, :game, game)
+    # BackupAgent.put(name, game)
+    # {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
 
   def handle_in("updateOneCard", %{"card1" => c1}, socket) do
+    view = GameServer.guess(socket.assigns[:game], socket.assigns[:user], c1)
     game = Game.updateOneCard(socket.assigns[:game], c1)
     socket = assign(socket, :game, game)
     name = socket.assigns[:name]

@@ -14,7 +14,10 @@ class Memory extends React.Component {
     this.channel = props.channel;
     this.state = {
       guessed: [],
-      numClicks: 0
+      player_one: "",
+      player_two: "",
+      player_one_score = 0,
+      player_two_score = 0
     }
 
     this.firstCard  = null;  // The index of first card in a round clicked
@@ -38,7 +41,7 @@ class Memory extends React.Component {
   sendGuess(view) {
     this.setState(view.game);
     this.channel.push("guess")
-        .receive("ok", this.gotView.bind(this))   
+        .receive("ok", this.gotView.bind(this))
   }
 
   handleClickChange(cardNum) {
@@ -85,7 +88,8 @@ class Memory extends React.Component {
       <Card root={this} num={14} handleClickChange={this.handleClickChange.bind(this)}/>
       <Card root={this} num={15} handleClickChange={this.handleClickChange.bind(this)}/>
     </div>
-    { <p>Total number of Clicks: {this.state.numClicks}</p> }
+    { <p>Player {this.state.player_one} score: {this.state.player_one_score}</p> }
+    { <p>Player {this.state.player_two} score: {this.state.player_two_score}</p> }
     <div>
       <p>
         <button onClick={this.newGame.bind(this)}>New Game</button>
