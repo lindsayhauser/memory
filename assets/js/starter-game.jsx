@@ -17,28 +17,26 @@ class Memory extends React.Component {
       player_one: "",
       player_two: "",
       player_one_score: 0,
-      player_two_score: 0
+      player_two_score: 0,
+      player_won: ""
     }
 
-    this.firstCard  = null;  // The index of first card in a round clicked
+    // this.firstCard  = null;  // The index of first card in a round clicked
 
     this.channel.join()
             .receive("ok", this.gotView.bind(this))
             .receive("error", resp => { console.log("Unable to join", resp)});
 
     this.channel.on("clickCard", ({view}) => {
-      // console.log("We got an update")
       console.log(view)
       this.setState(view);
     });
 
     this.channel.on("cardGuessed", ({view}) => {
-      // console.log("We got an update")
       console.log(view)
       this.setState(view);
     });
 
-    
   }
 
   gotView(view) {
@@ -84,9 +82,22 @@ class Memory extends React.Component {
   }
 
   render() {
-    return (
+    if (this.state.player_won != "") {
+      return (
+      <div>
+        alert("The game is done, {this.state.player_won} won!");
+      <p>
+        <button onClick={this.newGame.bind(this)}>New Game</button>
+      </p>
+      </div>
+      )
+    }
+       
+    return (  
   <div>
     <h3>Memory Game!</h3>
+    { <p>Player {this.state.player_one} score: {this.state.player_one_score}</p> }
+    { <p>Player {this.state.player_two} score: {this.state.player_two_score}</p> }
     <div className="row">
       <Card root={this} num={0} handleClickChange={this.handleClickChange.bind(this)} />
       <Card root={this} num={1} handleClickChange={this.handleClickChange.bind(this)}/>
@@ -111,12 +122,8 @@ class Memory extends React.Component {
       <Card root={this} num={14} handleClickChange={this.handleClickChange.bind(this)}/>
       <Card root={this} num={15} handleClickChange={this.handleClickChange.bind(this)}/>
     </div>
-    { <p>Player {this.state.player_one} score: {this.state.player_one_score}</p> }
-    { <p>Player {this.state.player_two} score: {this.state.player_two_score}</p> }
     <div>
-      <p>
-        <button onClick={this.newGame.bind(this)}>New Game</button>
-      </p>
+
     </div>
   </div>
     );
