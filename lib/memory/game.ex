@@ -24,12 +24,17 @@ defmodule Memory.Game do
   end
 
   def clickCard(game, user, cardNum) do
-    if(game.guessed1 == nil) do
-      updateOneCard(game, user, cardNum)
+    # If a second player has not joined the channel, player one cannot click
+    if game.player_two != "" do
+      if(game.guessed1 == nil) do
+        updateOneCard(game, user, cardNum)
+      else
+        if(game.guessed2 == nil) do
+        updateTwoCards(game, user, nil, cardNum)
+      end
+      end
     else
-      if(game.guessed2 == nil) do
-      updateTwoCards(game, user, nil, cardNum)
-    end
+      game
     end
   end
 
@@ -129,6 +134,8 @@ end
     Process.sleep(800)
     if game.guessed1 == nil || game.guessed2 == nil do
       IO.puts("we got to a guess without having two cards flipped over")
+      IO.puts(game.guessed1)
+      IO.puts(game.guessed2)
       game
     else
     g1 = game.guessed1  # card 1 flipped over
