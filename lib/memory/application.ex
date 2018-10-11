@@ -15,7 +15,6 @@ defmodule Memory.Application do
 
       # Starts a worker by calling: Hangman.Worker.start_link(arg)
       # {Hangman.Worker, arg},
-      #Memory.BackupAgent,
        Memory.GameServer,
     ]
 

@@ -10,7 +10,6 @@ export default function game_init(root, channel) {
 class Memory extends React.Component {
   constructor(props) {
     super(props);
-    //this.sendGuess = this.sendGuess.bind(this);
     this.channel = props.channel;
     this.state = {
       guessed: [],
@@ -21,11 +20,9 @@ class Memory extends React.Component {
       player_won: ""
     }
 
-    // this.firstCard  = null;  // The index of first card in a round clicked
-
     this.channel.join()
-            .receive("ok", this.gotView.bind(this))
-            .receive("error", resp => { console.log("Unable to join", resp)});
+      .receive("ok", this.gotView.bind(this))
+      .receive("error", resp => { console.log("Unable to join", resp)});
 
     this.channel.on("clickCard", ({view}) => {
       console.log(view)
@@ -36,7 +33,6 @@ class Memory extends React.Component {
       console.log(view)
       this.setState(view);
     });
-
   }
 
   gotView(view) {
@@ -56,43 +52,25 @@ class Memory extends React.Component {
         .receive("ok", this.gotView.bind(this))
   }
 
-
+  // Handle's when a card is clicked
   handleClickChange(cardNum) {
     this.channel.push("clickCard", {card1: cardNum})
     .receive("ok", this.sendGuess.bind(this));
-
-    // this.channel.push("clickCard", {cardNum})
-    // .receive("ok", this.sendGuess.bind(this));
-
-    // this.gotView.bind(this)
-
-    // this.firstCard = null;
-
-    // // Then this is the first card we clicked
-    // if(this.firstCard == null) {
-    //   this.firstCard = cardNum
-
-    //   this.channel.push("updateOneCard", {card1: cardNum})
-    //             .receive("ok", this.gotView.bind(this));
-    // }
-    // else {
-      // Second card clicked
-
-    // }
   }
 
   render() {
     if (this.state.player_won != "") {
       return (
       <div>
-        alert("The game is done, {this.state.player_won} won!");
+        <h3>
+        The game is done, {this.state.player_won} won!
+        </h3>
       <p>
-        <button onClick={this.newGame.bind(this)}>New Game</button>
+        <a href="/" onClick={this.newGame.bind(this)}>Return to Lobby </a>
       </p>
       </div>
-      )
-    }
-       
+      )}
+   
     return (  
   <div>
     <h3>Memory Game!</h3>
@@ -129,6 +107,7 @@ class Memory extends React.Component {
     );
   }
 }
+
 
 function Card(params) {
   let root = params.root

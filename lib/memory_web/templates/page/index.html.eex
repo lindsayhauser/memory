@@ -6,12 +6,5 @@
       <p>Game Name: <%= text_input f, :game %></p>
       <p><%= submit "Join" %>
     <% end %>
-
-    <!-- <label for="name-input"> Enter Player Name:</label>
-    <p><input type="text" id="name-input" value=""</p>
-    <label for="game-input"> Enter Game Name:</label>
-    <p><input type="text" id="game-input" value="1"</p>
-    <p><button onClick="window.location = '/game/'+ document.getElementById('game-input').value"
-      id="game-button">Play Game</button></p> -->
   </div>
 </div>

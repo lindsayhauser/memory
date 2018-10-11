@@ -1,12 +1,14 @@
-# Referenced http://www.ccs.neu.edu/home/ntuck/courses/2018/09/cs4550/notes/06-channels/notes.html
+# Referenced Nat Tuck's lecture notes:
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/09/cs4550/notes/06-channels/notes.html
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/09/cs4550/notes/09-two-players/notes.html
 defmodule Memory.Game do
   def new do
     %{
       cards: initialize_cards(),    # The board answers
-      guessed: initialize_empty(),  # board containing correct guesses
-      guessed1: nil,  # first card guessed in the round
+      guessed: initialize_empty(),  # board correct guesses that users have made
+      guessed1: nil,   # first card guessed in the round
       guessed2: nil,   # second card guessed in the round
-      player_turn: "",
+      player_turn: "", # what player's turn is it
       player_one: "",
       player_two: "",
       player_won: "",
@@ -15,22 +17,23 @@ defmodule Memory.Game do
     }
   end
 
-# References the lecture notes TODO add
-  def new(players) do
-    players = Enum.map players, fn {name, info} ->
-      {name, %{ score: info.score || 0 }}
-    end
-    Map.put(new(), :players, Enum.into(players, %{}))
-  end
+# # References Nat Tuck's lecture notes:
+# # http://www.ccs.neu.edu/home/ntuck/courses/2018/09/cs4550/notes/09-two-players/notes.html
+#   def new(players) do
+#     players = Enum.map players, fn {name, info} ->
+#       {name, %{ score: info.score || 0 }}
+#     end
+#     Map.put(new(), :players, Enum.into(players, %{}))
+#   end
 
   def clickCard(game, user, cardNum) do
-    # If a second player has not joined the channel, player one cannot click
+    # If a second player has not joined the channel, player 1 cannot play
     if game.player_two != "" do
       if(game.guessed1 == nil) do
         updateOneCard(game, user, cardNum)
       else
         if(game.guessed2 == nil) do
-        updateTwoCards(game, user, nil, cardNum)
+        updateTwoCards(game, user, cardNum)
       end
       end
     else
@@ -60,17 +63,23 @@ defmodule Memory.Game do
     else
       if game.player_two == "" do
         IO.puts("Adding player 2")
+        if game.player_one == user do
+          # If a second player with the same name joins, we append a 1 onto the
+          # name to distinguish the player
+          game = Map.put(game, :player_two, user <> "1")
+          game
+        else
         game = Map.put(game, :player_two, user)
         game
+      end
       else
         game
       end
       end
     end
 
-    # # Otherwise, add to map of players
-
-  def client_view(game, user) do
+  def client_view(game) do
+    IO.puts(game.player_turn)
     %{
       guessed: game.guessed,
       player_one: game.player_one, #name of p1
@@ -99,7 +108,7 @@ defmodule Memory.Game do
 
   # This updates the guesses such that two cards have now been clicked in the
   # round
-  def updateTwoCards(game, user, card1, card2) do
+  def updateTwoCards(game, user, card2) do
     if user == game.player_turn do  # prevents wrong user from clicking
     # if game.guessed2 != nil do  # Prevents user from clicking more than 2 cards in a round
     #   game
@@ -132,10 +141,11 @@ end
   # update the correctly guess state. Otherwise, flip them back over
   def guess(game) do
     Process.sleep(800)
-    if game.guessed1 == nil || game.guessed2 == nil do
+    if (game.guessed1 == nil || game.guessed2 == nil) do
       IO.puts("we got to a guess without having two cards flipped over")
       IO.puts(game.guessed1)
       IO.puts(game.guessed2)
+
       game
     else
     g1 = game.guessed1  # card 1 flipped over
@@ -177,7 +187,7 @@ end
               game =  Map.put(game, :player_won, game.player_two)
               game
             true ->
-              game = Map.put(game, :player_won, "It's a tie")
+              game = Map.put(game, :player_won, "both players")
               game
           end
         else

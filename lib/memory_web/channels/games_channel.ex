@@ -10,72 +10,29 @@ defmodule MemoryWeb.GamesChannel do
       socket = assign(socket, :game, game)
       view = GameServer.view(game, socket.assigns[:user])
       {:ok, %{"join" => game, "game" => view}, socket}
-
-      #socket = socket
-      # |> assign(:game, game)
-      # |> assign(:name, name)
-      # BackupAgent.put(name, game)
-      #{:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
       end
     end
 
-
   def handle_in("guess", _payload, socket) do
     view = GameServer.guess(socket.assigns[:game], socket.assigns[:user])
     broadcast! socket, "cardGuessed", %{view: view}
     {:reply, {:ok, %{ "game" => view}}, socket}
-    #name = socket.assigns[:name]
-    #game = Game.guess(socket.assigns[:game])
-    #socket = assign(socket, :game, game)
-    #BackupAgent.put(name, game)
-    #{:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
 
   def handle_in("clickCard", %{"card1" => c1}, socket) do
     IO.puts("We clicked a card")
     view = GameServer.clickCard(socket.assigns[:game], socket.assigns[:user], c1)
     broadcast! socket, "clickCard", %{view: view}
-    #game = Game.updateTwoCards(socket.assigns[:game], socket.assigns[:user], c1, c2)
-    #socket = assign(socket, :game, game)
-    #name = socket.assigns[:name]
-    #BackupAgent.put(name, game)
-    # broadcast! socket, "updateTwoCards", %{body: body}
-    #   {:noreply, socket}
     {:reply, {:ok, %{ "game" => view}}, socket}
   end
 
-  # def handle_in("updateOneCard", %{"card1" => c1}, socket) do
-  #   view = GameServer.updateOneCard(socket.assigns[:game], socket.assigns[:user], c1)
-  #   {:reply, {:ok, %{ "game" => view}}, socket}
-  #   #{:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
-  #   end
-  #   #socket = assign(socket, :game, game)
-  #   #name = socket.assigns[:name]
-  #   #game = Game.updateOneCard(socket.assigns[:game], socket.assigns[:user], c1)
-  #   #BackupAgent.put(name, game)
-  #
-  #
-  # def handle_in("updateTwoCards", %{"card1" => c1, "card2" => c2}, socket) do
-  #   view = GameServer.updateTwoCards(socket.assigns[:game], socket.assigns[:user], c1, c2)
-  #   #game = Game.updateTwoCards(socket.assigns[:game], socket.assigns[:user], c1, c2)
-  #   #socket = assign(socket, :game, game)
-  #   #name = socket.assigns[:name]
-  #   #BackupAgent.put(name, game)
-  #   # broadcast! socket, "updateTwoCards", %{body: body}
-  #   #   {:noreply, socket}
-  #   {:reply, {:ok, %{ "game" => view}}, socket}
-  # end
-
   def handle_in("restart", payload, socket) do
-    game = Game.new()
-    name = socket.assigns[:name]
-    socket = socket
-    |> assign(:game, game)
-    |> assign(:name, name)
-    #BackupAgent.put(name, game)
-    {:ok, %{"game" => Game.client_view(game)}, socket}
+    IO.puts("User decided to restart the game")
+    # gg = Game.new()
+    view = GameServer.resetGame(socket.assigns[:game], socket.assigns[:user])
+    {:reply, {:ok, %{"game" => view}}, socket}
   end
 
   # It is also common to receive messages from the client and

@@ -1,4 +1,5 @@
-## TODO references the lecture notes
+# References Nat Tuck's lecture Notes
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/09/cs4550/notes/09-two-players/notes.html
 
 defmodule Memory.GameServer do
   use GenServer
@@ -14,24 +15,17 @@ defmodule Memory.GameServer do
     GenServer.call(__MODULE__, {:view, game, user})
   end
 
-   def guess(game, user) do
+  def guess(game, user) do
     GenServer.call(__MODULE__, {:guess, game, user})
   end
 
-
   def clickCard(game, user, c1) do
    GenServer.call(__MODULE__, {:clickCard, game, user, c1})
- end
+  end
 
- #  def updateOneCard(game, user, c1) do
- #   GenServer.call(__MODULE__, {:updateOneCard, game, user, c1})
- # end
- #
- # def updateTwoCards(game, user, c1, c2) do
- #   #IO.puts("called the gameserver view")
- #  GenServer.call(__MODULE__, {:updateTwoCards, game, user, c1, c2})
- #  end
-
+  def resetGame(game, user) do
+   GenServer.call(__MODULE__, {:resetGame, game, user})
+  end
 
   #IMPLEMENTATION
   def init(args) do
@@ -42,35 +36,29 @@ defmodule Memory.GameServer do
     IO.puts("got to the game server")
     gg = Map.get(state, game, Game.new)
     gg = Game.addUser(gg, user)
-    IO.puts("Successfully added user")
-    {:reply, Game.client_view(gg, user), Map.put(state, game, gg)}
+    # IO.puts("Successfully added user")
+    {:reply, Game.client_view(gg), Map.put(state, game, gg)}
   end
 
    def handle_call({:clickCard, game, user, cardNum}, _from, state) do
-     IO.puts("gen server updating one card")
+     # IO.puts("gen server updating one card")
     gg = Map.get(state, game, Game.new)
     |> Game.clickCard(user, cardNum)
-    {:reply, Game.client_view(gg, user), Map.put(state, game, gg)}
+    {:reply, Game.client_view(gg), Map.put(state, game, gg)}
   end
 
- #  def handle_call({:updateOneCard, game, user, cardNum}, _from, state) do
- #    IO.puts("gen server updating one card")
- #   gg = Map.get(state, game, Game.new)
- #   |> Game.updateOneCard(user, cardNum)
- #   {:reply, Game.client_view(gg, user), Map.put(state, game, gg)}
- # end
- #
- # def handle_call({:updateTwoCards, game, user, card1, card2}, _from, state) do
- #   IO.puts("gen server updating second card")
- #  gg = Map.get(state, game, Game.new)
- #  |> Game.updateTwoCards(user, card1, card2)
- #  {:reply, Game.client_view(gg, user), Map.put(state, game, gg)}
- #  end
-
-   def handle_call({:guess, game, user}, _from, state) do
+  def handle_call({:guess, game, user}, _from, state) do
      IO.puts("gen server checking the guess")
     gg = Map.get(state, game, Game.new)
     |> Game.guess()
-    {:reply, Game.client_view(gg, user), Map.put(state, game, gg)}
+    {:reply, Game.client_view(gg), Map.put(state, game, gg)}
   end
+
+  def handle_call({:resetGame, game}, _from, state) do
+    IO.puts("Making new game in genserver")
+    gg = Game.new()
+    {:reply, Game.client_view(gg), Map.put(state, game, gg)}
+ end
+
+
 end

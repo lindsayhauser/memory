@@ -1,4 +1,5 @@
-# Lecture Notes TODO reference
+# References Nat Tuck's Lecture Notes
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/09/cs4550/notes/09-two-players/notes.html
 defmodule MemoryWeb.Plugs.PutUserToken do
   import Plug.Conn
 

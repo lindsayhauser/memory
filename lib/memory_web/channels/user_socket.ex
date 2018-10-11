@@ -17,7 +17,8 @@ defmodule MemoryWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
 
-#Reference Lecture Notes TODO Reference
+# Used Nat Tuck's Lecture Notes as reference
+# http://www.ccs.neu.edu/home/ntuck/courses/2018/09/cs4550/notes/09-two-players/notes.html
 
   def connect(%{"token" => token}, socket, _connect_info) do
     # max_age: 1209600 is equivalent to two weeks in seconds
