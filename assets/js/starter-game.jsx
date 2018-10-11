@@ -25,6 +25,20 @@ class Memory extends React.Component {
     this.channel.join()
             .receive("ok", this.gotView.bind(this))
             .receive("error", resp => { console.log("Unable to join", resp)});
+
+    this.channel.on("clickCard", ({view}) => {
+      // console.log("We got an update")
+      console.log(view)
+      this.setState(view);
+    });
+
+    this.channel.on("cardGuessed", ({view}) => {
+      // console.log("We got an update")
+      console.log(view)
+      this.setState(view);
+    });
+
+    
   }
 
   gotView(view) {
@@ -43,6 +57,7 @@ class Memory extends React.Component {
     this.channel.push("guess")
         .receive("ok", this.gotView.bind(this))
   }
+
 
   handleClickChange(cardNum) {
     this.channel.push("clickCard", {card1: cardNum})
